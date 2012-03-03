@@ -1,8 +1,8 @@
-:- include('graph')
-:- include('graph_metro')
+:- include('graph').
+:- include('graph_metro').
 
-%% hamiltonian_path(+Graph:list, -Path:list) is nondet
-%% hamiltonian_path(+Vertices:predicate, +Edge:predicate, -Path:list) 
+%% hampath(+Graph:list, -Path:list) is nondet
+%% hampath(+Vertices:predicate, +Edge:predicate, -Path:list) 
 %% 		is nondet
 %
 % Finds one hamiltonian path in a given graph.
@@ -12,21 +12,21 @@
 % - Edge, a predicate that tells if there is an edge between two vertices
 % - Graph = graph(Vertices, Edge).
 %
-hamiltonian_path(graph(Vertices, Edge), Path) :-
-	hamiltonian_path(Vertices, Edge, Path).
-hamiltonian_path(Vertices, Edge, Path) :-
+hampath(graph(Vertices, Edge), Path) :-
+	hampath(Vertices, Edge, Path).
+hampath(Vertices, Edge, Path) :-
 	call(Vertices, VertexList),
-	hamiltonian_path(VertexList, Edge, [], PathReversed),
+	hampath(VertexList, Edge, [], PathReversed),
 	reverse(PathReversed, Path).
 	
-hamiltonian_path([], _, Acc, Acc).
-hamiltonian_path(Vertices, Edge, [], Path) :-
+hampath([], _, Acc, Acc).
+hampath(Vertices, Edge, [], Path) :-
 	pick_one(Vertices, Vertex, Rest),
-	hamiltonian_path(Rest, Edge, [Vertex | Accu], Path)
-hamiltonian_path(Vertices, Edge, [LastVertex | Tl], Path) :-
+	hampath(Rest, Edge, [Vertex | Accu], Path).
+hampath(Vertices, Edge, [LastVertex | Tl], Path) :-
 	pick_one(Vertices, Vertex, Rest),
 	is_adjacent(Vertex, LastVertex, Edge),
-	hamiltonian_path(Rest, Edge, [Vertex, LastVertex | Tl], Path).
+	hampath(Rest, Edge, [Vertex, LastVertex | Tl], Path).
 	
 pick_one([Hd | Tl], Hd, Tl).
 pick_one([Hd | Tl], Element, Rest) :- 
