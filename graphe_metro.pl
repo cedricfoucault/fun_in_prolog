@@ -81,6 +81,3 @@ edge(l11,l14).
 edge(l12,l13).
 edge(l12,l14).
 edge(l13,l14).
-
-is_adjacent(U, V, Edge) :- call(Edge, U, V).
-is_adjacent(U, V, Edge) :- call(Edge, V, U).

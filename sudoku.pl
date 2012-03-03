@@ -1,37 +1,26 @@
-:- use_module(library(list)).
-:- consult(library(matrix))).
+:- include('list').
+:- include('matrix').
 
 %% sudoku(?Rows:matrix) is nondet
 %
 % Solves the Sudoku puzzle specified by Rows by filling it directly.
-% 	- Rows is a 2D 9x9 matrix represented as the list of its Rows
-% 	corresponding to a partially filled sudoku puzzle
+% Rows is a 9x9 grid represented as the list of its Rows
+% corresponding to a partially filled sudoku puzzle.
 %
 sudoku(Rows) :-
 /* strategy used to solve sudoku: generate and test */
 	/* generate a well formed sudoku puzzle: 
 	9x9 table of integers in [|1, 9|]: */
-	Rows = [Row1, Row2, Row3, Row4, Row5, Row6, Row7, Row8, Row9],
-	Row1 = [C11, C12, C13, C14, C15, C16, C17, C18, C19],
-	Row2 = [C21, C22, C23, C24, C25, C26, C27, C28, C29],
-	Row3 = [C31, C32, C33, C34, C35, C36, C37, C38, C39],
-	Row4 = [C41, C42, C43, C44, C45, C46, C47, C48, C49],
-	Row5 = [C51, C52, C53, C54, C55, C56, C57, C58, C59],
-	Row6 = [C61, C62, C63, C64, C65, C66, C67, C68, C69],
-	Row7 = [C71, C72, C73, C74, C75, C76, C77, C78, C79],
-	Row8 = [C81, C82, C83, C84, C85, C86, C87, C88, C89],
-	Row9 = [C91, C92, C93, C94, C95, C96, C97, C98, C99],
+	length(Rows, 9),
+	iter_list(length_(9), Rows),
 	iter_list(fd_domain_(1, 9), Rows),
-
 	/* get the columns and the squares out of the rows:*/
 	transpose(Rows, Columns),
 	get_squares(Rows, Squares),
-	
 	/* force each row, column and square to have all different integers */
 	iter_list(fd_all_different, Rows),
 	iter_list(fd_all_different, Columns),
 	iter_list(fd_all_different, Squares),
-	
 	/* force prolog to give us explicitly each cell value */
 	iter_list(fd_labeling, Rows).
 	
@@ -49,13 +38,8 @@ sudoku(Rows) :-
 %	- Rows is a resulting 6x6 matrix, one solution to the puzzle
 %
 kenken(Groups, Rows) :-
-	Row1 = [C11, C12, C13, C14, C15, C16],
-	Row2 = [C21, C22, C23, C24, C25, C26],
-	Row3 = [C31, C32, C33, C34, C35, C36],
-	Row4 = [C41, C42, C43, C44, C45, C46],
-	Row5 = [C51, C52, C53, C54, C55, C56],
-	Row6 = [C61, C62, C63, C64, C65, C66],
-	Rows = [Row1, Row2, Row3, Row4, Row5, Row6],
+	length(Rows, 6),
+	iter_list(length_(6), Rows),
 	iter_list(fd_domain_(1, 6), Rows),
 	transpose(Rows, Columns),
 	iter_list(fd_all_different, Rows),
@@ -67,22 +51,24 @@ kenken(Groups, Rows) :-
 %% unequal(+UnequalCells:list, ?Rows:matrix) is nondet
 %
 % Solves the Unequal puzzle specified by UnequalCells, the solution being Rows
-%	- UnequalCells is a list of each group of cells contained in a 6x6 grid
-% 	where we have to validate an arithmetic condition.
-%	Each group has the following form:
+%	- UnequalCells is the list of cells 
+%	where we have to validate an inequality.
+%	Each UnequalCell has the following form:
 % 	UnequalCell = ['ord', Indices], where:
 %		- 'ord' = '<'|'>'|'v'|'^' is order used
 %		- Indices = cell(i, j)
-%		e.g. if UnequalCell = ['v', cell(i, j)] then Rows(i, j) > Rows(i, j + 1)
+%	e.g. if UnequalCell = ['v', cell(i, j)] then Rows(i, j) > Rows(i, j + 1)
 %	- Rows is a resulting 6x6 matrix, one solution to the puzzle
 %
 unequal(UnequalCells, Rows) :-
-	Row1 = [C11, C12, C13, C14, C15],
+/*	Row1 = [C11, C12, C13, C14, C15],
 	Row2 = [C21, C22, C23, C24, C25],
 	Row3 = [C31, C32, C33, C34, C35],
 	Row4 = [C41, C42, C43, C44, C45],
 	Row5 = [C51, C52, C53, C54, C55],
-	Rows = [Row1, Row2, Row3, Row4, Row5],
+	Rows = [Row1, Row2, Row3, Row4, Row5],*/
+	length(Rows, 5),
+	iter_list(length_(5), Rows),
 	iter_list(fd_domain_(1, 5), Rows),
 	transpose(Rows, Columns),
 	iter_list(fd_all_different, Rows),
@@ -98,12 +84,8 @@ unequal(UnequalCells, Rows) :-
 % See adjacent_problem/4 documentation for more details.
 %
 adjacent(AdjacenceRows, AdjacenceColumns, Rows) :-
-	Row1 = [C11, C12, C13, C14, C15],
-	Row2 = [C21, C22, C23, C24, C25],
-	Row3 = [C31, C32, C33, C34, C35],
-	Row4 = [C41, C42, C43, C44, C45],
-	Row5 = [C51, C52, C53, C54, C55],
-	Rows = [Row1, Row2, Row3, Row4, Row5],
+	length(Rows, 5),
+	iter_list(length_(5), Rows),
 	iter_list(fd_domain_(1, 5), Rows),
 	transpose(Rows, Columns),
 	iter_list(fd_all_different, Rows),
@@ -122,13 +104,8 @@ adjacent(AdjacenceRows, AdjacenceColumns, Rows) :-
 % See towers_problem/6 documentation for more details.
 %
 towers(LeftRows, RightRows, TopColumns, BottomColumns, Rows) :-
-	Row1 = [C11, C12, C13, C14, C15, C16],
-	Row2 = [C21, C22, C23, C24, C25, C26],
-	Row3 = [C31, C32, C33, C34, C35, C36],
-	Row4 = [C41, C42, C43, C44, C45, C46],
-	Row5 = [C51, C52, C53, C54, C55, C56],
-	Row6 = [C61, C62, C63, C64, C65, C66],
-	Rows = [Row1, Row2, Row3, Row4, Row5, Row6],
+	length(Rows, 6),
+	iter_list(length_(6), Rows),
 	iter_list(fd_domain_(1, 6), Rows),
 	transpose(Rows, Columns),
 	iter_list(fd_all_different, Rows),
@@ -178,7 +155,7 @@ is_valid_group_(Rows, Group) :-
 	
 %% is_valid_unequal(+UnequalCell:list, +Rows:matrix) is semidet
 %
-% Checks if Rows satisfy the unequlity constraints specified by UnequalCells.
+% Checks if Rows satisfy the unequality constraints specified by UnequalCells.
 % 	- UnequalCell = ['ord', Indices], where:
 %		- 'ord' = '<'|'>'|'v'|'^' is order used
 %		- Indices = cell(i, j)
@@ -237,13 +214,8 @@ is_valid_adjacent([' ' | TlAdj], [Cell1, Cell2 | TlVal]) :-
 	
 %% is_valid_towers(+NumTowers:integer, +Towers:list) is semidet
 %
-% Checks if List satisfy the constraints specified in AdjacenceList.
-% The constraints are expressed as follows:
-% - List = [Cell1, Cell2 ...]
-% - AdjacenceList = [constraint1, ...] where
-%   constraint1 = '|' | ' ' tells whether there is a marker or not in the grid
-%   '|': Cell2 = Cell1 +- 1
-%   ' ': Cell2 =\= Cell1 +- 1
+% Checks if the list Towers satisfy the constraint expressed by NumTowers.
+% Exactly NumTowers must be visible when looking at the list from its head.
 %
 is_valid_towers(none, _).
 is_valid_towers(NumTowers, [HdTowers | TlTowers]) :-
@@ -264,20 +236,6 @@ is_valid_towers(NumTowers, CurrentMax, [HdTowers | TlTowers]) :-
 	;	HdTowers #< CurrentMax,
 		is_valid_towers(NumTowers, CurrentMax, TlTowers)
 	).
-	
-
-%% get_cell(+Indices:term, +Rows:matrix, -Cell:integer) is det
-%
-% Get the value of the cell in Rows indexed by Indices.
-% 	- Indices = cell(i, j), ith row, jth column
-%	- Rows is a 2D matrix
-%	- CellValue is Rows(i, j)
-%
-get_cell(cell(NRow, NColumn), Rows, CellValue) :-
-	nth(NRow, Rows, Row),
-	nth(NColumn, Row, CellValue).
-
-get_cell_(Rows, Indices, CellValue) :- get_cell(Indices, Rows, CellValue).
 	
 
 
@@ -302,7 +260,7 @@ fd_domain_(Min, Max, L) :- fd_domain(L, Min, Max).
 
 %% sudoku_problem(+N:integer, -Rows:matrix) is det
 %
-% List of Sudoku Puzzles. Rows is a partially filled 9x9 grid.
+% List of sample Sudoku Puzzles. Rows is a partially filled 9x9 grid.
 %
 sudoku_problem(1, [[1,_,_,8,_,4,_,_,_],
              	  [_,2,_,_,_,_,4,5,6],
@@ -337,13 +295,40 @@ sudoku_problem(3, [[1,_,_,_,_,_,_,_,_],
 
 %% kenken_problem(+N:integer, -KenKenProblem:list) is det
 %
-% List of KenKen puzzles.
+% List of sample KenKen puzzles.
+% - Groups is a list of each group of cells contained in a 6x6 grid
+% where we have to validate an arithmetic condition.
+% Each group has the following form:
+% Group = ['op', Value, Region], where:
+%	- 'op' = '+'|'*'|'-'|'/' is the arithmetic operation
+%	- Value:integer is the expected total
+%	- Region is the list of cell indices where we should do the calculation
 %
-kenken_problem(N, L1) :- 
-	kenken_problem0(N, L0),
+kenken_problem(2, L1) :- 
+	kenken_problem0(2, L0),
 	map_list(index_at_one, L0, L1).
 	
-kenken_problem0(1, 
+kenken_problem(1, 
+	[['*',180, [cell(1, 1), cell(1, 2), cell(2, 2)]],
+	 ['+',  5, [cell(1, 3), cell(2, 3)]],
+	 ['+',  5, [cell(1, 4), cell(1, 5)]],
+	 ['/',  3, [cell(1, 6), cell(2, 6)]],
+	 ['-',  3, [cell(2, 1), cell(3, 1)]],
+	 ['*', 12, [cell(2, 4), cell(3, 4)]],
+	 ['/',  2, [cell(2, 5), cell(3, 5)]],
+	 ['*',  6, [cell(3, 2), cell(4, 1), cell(4, 2)]],
+	 ['-',  1, [cell(3, 3), cell(4, 3)]],
+	 ['-',  2, [cell(3, 6), cell(4, 6)]],
+	 ['*',  6, [cell(4, 4), cell(5, 4)]],
+	 ['+',  6, [cell(4, 5), cell(5, 5)]],
+	 ['*',  4, [cell(5, 1), cell(6, 1)]],
+	 ['-',  1, [cell(5, 2), cell(6, 2)]],
+	 ['+',  5, [cell(5, 3), cell(6, 3)]],
+	 ['-',  1, [cell(6, 4), cell(6, 5)]],
+	 ['+',  7, [cell(5, 6), cell(6, 6)]]]
+	).
+	
+kenken_problem0(2, 
 	[['+', 11, [cell(0, 0), cell(1, 0)]],
 	 ['/',  2, [cell(0, 1), cell(0, 2)]],
 	 ['*', 20, [cell(0, 3), cell(1, 3)]],
@@ -363,7 +348,14 @@ kenken_problem0(1,
 
 %% unequal_problem(+N:integer, -UnequalCells:list, -Rows:list) is det
 %
-% List of Unequal puzzles. The Rows can be partially filled.
+% List of sample Unequal puzzles. The Rows can be partially filled.
+%	- UnequalCells is the list of cells 
+%	where we have to validate an inequality.
+%	Each UnequalCell has the following form:
+% 	UnequalCell = ['ord', Indices], where:
+%		- 'ord' = '<'|'>'|'v'|'^' is order used
+%		- Indices = cell(i, j)
+%	e.g. if UnequalCell = ['v', cell(i, j)] then Rows(i, j) > Rows(i, j + 1)
 %
 unequal_problem(1, 
 	[['>', cell(1, 1)],
@@ -382,9 +374,10 @@ unequal_problem(1,
      [_,_,_,_,_]]
 	).
 
-%% adjacent_problem(+N:integer, -AdjacenceRows:list, -AdjacenceColumns:list, -Rows:matrix) is det
+%% adjacent_problem(+N:integer,
+%%	-AdjacenceRows:list, -AdjacenceColumns:list, -Rows:matrix) is det
 %
-% List of Adjacent puzzles. The Rows can be partially filled.
+% List of sample Adjacent puzzles. The Rows can be partially filled.
 % AdjacenceRows and AdjacenceColumns tell where the markers are on the grid:
 %  - if AdjacenceRows(i, j) = '|',  then there is a marker
 %	between Rows(i, j) and Rows(i, j + 1) (' ' if not)
@@ -414,7 +407,7 @@ adjacent_problem(1,
 %%		-Rows:matrix
 %%	) is det
 %
-% List of Towers puzzles. The Rows can be partially filled.
+% List of sample Towers puzzles. The Rows can be partially filled.
 % - LeftRows and RightRows tell, if indicated,
 % the number of towers visible from the left and from the right for each row.
 % - TopColumns and BottomColumns tell, if indicated,
@@ -436,22 +429,27 @@ towers_problem(1,
 solve_problem('sudoku', N) :-
 	sudoku_problem(N, Rows),
 	sudoku(Rows),
+	write('Solution:'), nl,
 	write_matrix(Rows).
 solve_problem('kenken', N) :-
 	kenken_problem(N, KenKenProblem),
 	kenken(KenKenProblem, Rows),
+	write('Solution:'), nl,
 	write_matrix(Rows).
 solve_problem('unequal', N) :-
 	unequal_problem(N, UnequalCells, Rows),
 	unequal(UnequalCells, Rows),
+	write('Solution:'), nl,
 	write_matrix(Rows).
 solve_problem('adjacent', N) :-
 	adjacent_problem(N, AdjacenceRows, AdjacenceColumns, Rows),
 	adjacent(AdjacenceRows, AdjacenceColumns, Rows),
+	write('Solution:'), nl,
 	write_matrix(Rows).	
 solve_problem('towers', N) :-
 	towers_problem(N, LeftRows, RightRows, TopColumns, BottomColumns, Rows),
 	towers(LeftRows, RightRows, TopColumns, BottomColumns, Rows),
+	write('Solution:'), nl,
 	write_matrix(Rows).
 
 index_at_one([], []).
@@ -463,3 +461,4 @@ index_at_one_cells([cell(I, J) | Tl0], [cell(N, M) | Tl1]) :-
 	N is I + 1,
 	M is J + 1,
 	index_at_one_cells(Tl0, Tl1).
+	
