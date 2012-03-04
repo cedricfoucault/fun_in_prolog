@@ -98,7 +98,7 @@ ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '5K') :-
 	LK >= 9.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '5T') :-
 	LT >= 9.
-ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '5T') :-
+ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '4SA') :-
 	Lm is LK + LT,
 	Lm >= 11,
 	LK >= 5,

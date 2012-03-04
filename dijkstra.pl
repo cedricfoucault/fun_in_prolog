@@ -49,7 +49,7 @@ init_predecessor([vertex(V, L) | GTl], Start, [vertex(V, L, infinity, nil) | GTl
 	V \= Start,
 	init_predecessor(GTl, Start, GTlNew).
 	
-%% Path(+DijkstraGraph:list, +Start:term, +End:term, -Path) is det
+%% path(+DijkstraGraph:list, +Start:term, +End:term, -Path) is det
 %
 % Finds the shortest path in the Dijkstra-transformed graph 
 % containing the predecessor of each vertex.

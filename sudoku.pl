@@ -61,12 +61,6 @@ kenken(Groups, Rows) :-
 %	- Rows is a resulting 6x6 matrix, one solution to the puzzle
 %
 unequal(UnequalCells, Rows) :-
-/*	Row1 = [C11, C12, C13, C14, C15],
-	Row2 = [C21, C22, C23, C24, C25],
-	Row3 = [C31, C32, C33, C34, C35],
-	Row4 = [C41, C42, C43, C44, C45],
-	Row5 = [C51, C52, C53, C54, C55],
-	Rows = [Row1, Row2, Row3, Row4, Row5],*/
 	length(Rows, 5),
 	iter_list(length_(5), Rows),
 	iter_list(fd_domain_(1, 5), Rows),
