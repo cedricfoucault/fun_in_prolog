@@ -1,4 +1,4 @@
-Hello !
+Hello!
 
 This repo consists of a bunch of predicates that use the power of PROLOG to solve various fun problems.
 

@@ -21,7 +21,7 @@ write_matrix([Row1| TlRows]) :-
 	write_matrix_loop(TlRows).
 
 write_matrix_loop([LastRow]) :- 
-	write(' '), write(LastRow), write(']'), nl.
+	write(' '), write(LastRow), write(']'), !, nl.
 write_matrix_loop([Row1 | TlRows]) :-
 	write(' '), write(Row1), nl,
 	write_matrix_loop(TlRows).
