@@ -30,5 +30,7 @@ Template:
 <determinism> specifiers:
 det      Must succeed exactly once and leave no choice-points.
 semidet  Must either fail or succeed exactly once and leave no choice-points.
-multi    Must succeed at least once but may leave choice-points on the last success.
-nondet   May either fail or succeed any number of times and may leave choicepoints on last success.
+multi    Must succeed at least once but may leave choice-points
+		 on the last success.
+nondet   May either fail or succeed any number of times and may leave
+		 choicepoints on last success.

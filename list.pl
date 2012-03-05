@@ -3,7 +3,7 @@
 % Iters Func on each element of List.
 % Func is expected to be a function of arity 1.
 %
-iter_list(Func, []).
+iter_list(_, []).
 iter_list(Func, [Hd | Tl]) :-
 	call(Func, Hd),
 	iter_list(Func, Tl).
@@ -13,7 +13,7 @@ iter_list(Func, [Hd | Tl]) :-
 % Iters Func on each element of List and List2.
 % Func is expected to be a function of arity 2.
 %
-map_list(Func, [], []).
+map_list(_, [], []).
 map_list(Func, [Hd | Tl], [Hd2 | Tl2]) :-
 	call(Func, Hd, Hd2),
 	map_list(Func, Tl, Tl2).
@@ -52,7 +52,7 @@ quick_sort([H|T], Order, Acc, Sorted):-
 	quick_sort(L1, Order, Acc, Sorted1),
 	quick_sort(L2, Order, [H|Sorted1], Sorted).
 
-pivoting(_, H, [], [], []).
+pivoting(_, _, [], [], []).
 pivoting(Order, H, [X|T], [X|L], G):-
 	call(Order, H, X),
 	pivoting(Order, H, T, L, G).

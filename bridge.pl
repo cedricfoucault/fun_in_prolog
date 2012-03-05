@@ -6,7 +6,7 @@
 % selon le système d'enchères français (SEF).
 % Ouverture = 'NC' où N est la levée, C = P|C|K|T est la couleur
 %
-ouverture(Main, Ouverture) :-
+ouverture(Main, _) :-
 	length(Main, NbCartes),
 	NbCartes \= 13,
 	throw(error(main_non_valide)).
@@ -25,41 +25,50 @@ ouverture(Main, Ouverture) :-
 	ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, Ouverture).
 	
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '2K') :-
-	HL >= 24.
+	HL >= 24,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '2T') :-
 	(	unicolore(LP, LC, LK, LT), 
 		HL >= 20, HL =< 23
 	;	reguliere(LP, LC, LK, LT), 
 		HL >= 22, HL =< 23
-	).
+	), !.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '2SA') :-
 	reguliere(LP, LC, LK, LT),
-	HL >= 20, HL =< 21.
+	HL >= 20, HL =< 21,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '1P') :-
 	LP >= 5,
-	HL >= 12, HL =< 23.
+	HL >= 12, HL =< 23,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '1C') :-
 	LC >= 5,
-	HL >= 12, HL =< 23.
+	HL >= 12, HL =< 23,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '1SA') :-
 	reguliere(LP, LC, LK, LT),
-	HL >= 15, HL =< 17.
+	HL >= 15, HL =< 17,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '1K') :-
 	(	LK > LT, LK >= 3
 	;	LK = LT, LK >= 4
 	),
-	HL >= 12, HL =< 23.
+	HL >= 12, HL =< 23,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '1K') :-
 	(	LT > LK, LT >= 3
 	;	LT = LK, LT = 3
 	),
-	HL >= 12, HL =<23.
+	HL >= 12, HL =<23,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '2P') :-
 	LP >= 6,
-	HL >= 6, HL =< 10.
+	HL >= 6, HL =< 10,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '2C') :-
 	LC >= 6,
-	HL >= 6, HL =< 10.
+	HL >= 6, HL =< 10,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '3SA') :-
 	Lm is LK + LT,
 	Lm >= 7,
@@ -69,40 +78,52 @@ ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '3SA') :-
 	points_h(MainP, HP), 
 	points_h(MainC, HK),
 	HM is HP + HK,
-	HM =< 2.
+	HM =< 2,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '3P') :-
 	LP = 7,
-	HL >= 6, HL =< 10.
+	HL >= 6, HL =< 10,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '3C') :-
 	LC = 7,
-	HL >= 6, HL =< 10.
+	HL >= 6, HL =< 10,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '3K') :-
 	LK = 7,
-	HL >= 6, HL =< 10.
+	HL >= 6, HL =< 10,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '3T') :-
 	LT = 7,
-	HL >= 6, HL =< 10.
+	HL >= 6, HL =< 10,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '4P') :-
 	LP >= 8,
-	H < 12.
+	H < 12,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '4C') :-
 	LC >= 8,
-	H < 12.
+	H < 12,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '4K') :-
 	LK = 8,
-	H < 12.
+	H < 12,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '4T') :-
 	LT = 8,
-	H < 12.
+	H < 12,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '5K') :-
-	LK >= 9.
+	LK >= 9,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '5T') :-
-	LT >= 9.
+	LT >= 9,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '4SA') :-
 	Lm is LK + LT,
 	Lm >= 11,
 	LK >= 5,
-	LT >= 5.
+	LT >= 5,
+	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, 'Passe').
 
 
@@ -207,7 +228,8 @@ points_h([_ | Tl], Acc, N) :-
 %% points_h(+Main:list, -H:integer) is det
 %
 % Décompte le nombre de points de longueur de la main Main.
-% 1 point pour toute carte à partir de la cinquième dans une couleur commandée % par au moins un As, un Roi ou Dame-Valet (selon wikipedia).
+% 1 point pour toute carte à partir de la cinquième dans une couleur commandée
+% par au moins un As, un Roi ou Dame-Valet (selon wikipedia).
 %
 points_l([MeilleureCarte | Tl], N) :-
 	sup(MeilleureCarte, roi),

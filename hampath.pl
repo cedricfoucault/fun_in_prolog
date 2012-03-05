@@ -22,7 +22,7 @@ hampath(Vertices, Edge, Path) :-
 hampath([], _, Acc, Acc).
 hampath(Vertices, Edge, [], Path) :-
 	pick_one(Vertices, Vertex, Rest),
-	hampath(Rest, Edge, [Vertex | Accu], Path).
+	hampath(Rest, Edge, [Vertex], Path).
 hampath(Vertices, Edge, [LastVertex | Tl], Path) :-
 	pick_one(Vertices, Vertex, Rest),
 	is_adjacent(Vertex, LastVertex, Edge),
@@ -32,3 +32,29 @@ pick_one([Hd | Tl], Hd, Tl).
 pick_one([Hd | Tl], Element, Rest) :- 
 	pick_one(Tl, Element, RestTl),
 	Rest = [Hd | RestTl].
+
+/**
+In other words:
+
+HAI
+HAMCAT IZ WATCHING UR GRAPH DO
+I HAS A BUKKIT
+IM IN YR LOOP
+	CAN HAS VERTEX?
+		YA RLY
+			GIMME VERTEX
+			PLZ GO TO VERTEX?
+				AWSUM THX
+					PUT VERTEX IN MAH BUKKIT
+				O NOES
+					U DUMBZ
+					LOLPROLOG PLZ HELP GIMME MOAR
+		NOWAI
+			I FOUND MAH PATH ITZ BUKKIT
+IM OUTTA YR LOOP
+KTHX
+KTHXBYE
+
+*/
+		
+

@@ -220,7 +220,7 @@ is_valid_towers(NumTowers, [HdTowers | TlTowers]) :-
 is_valid_towers(0, _, []).
 is_valid_towers(0, 6, [HdTowers | TlTowers]) :-
 	HdTowers #< 6,
-	is_valid_towers(NumTowers, CurrentMax, TlTowers).
+	is_valid_towers(0, 6, TlTowers).
 is_valid_towers(NumTowers, CurrentMax, [HdTowers | TlTowers]) :-
 	NumTowers #> 0,
 	(	HdTowers #> CurrentMax,

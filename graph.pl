@@ -4,7 +4,7 @@
 % The path Path consists of the list of its vertices.
 %	
 write_path([]).
-write_path([End]) :- write(End), nl.
+write_path([End]) :- !, write(End), nl.
 write_path([Hd | Tl]) :-
 	write(Hd), 
 	write(' -> '),
