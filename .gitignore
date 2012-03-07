@@ -8,6 +8,10 @@
 *.tar
 *.zip
 
+# Software generated files #
+######################
+*.tmproj
+
 # OS generated files #
 ######################
 .DS_Store*
