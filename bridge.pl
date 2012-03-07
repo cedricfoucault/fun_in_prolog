@@ -11,19 +11,22 @@ ouverture(Main, _) :-
 	NbCartes \= 13,
 	throw(error(main_non_valide)).
 ouverture(Main, Ouverture) :-
-	tri(Main, MainP, MainC, MainK, MainT),
+	tri_couleur(Main, MainP, MainC, MainK, MainT),
+	ouverture(MainP, MainC, MainK, MainT, Ouverture).
+ouverture(MainP, MainC, MainK, MainT, Ouverture) :-
+	tri(MainP, MainC, MainK, MainT, MainPTriee, MainCTriee, MainKTriee, MainTTriee),
 	length(MainP, LP), 
 	length(MainC, LC), 
 	length(MainK, LK), 
 	length(MainT, LT),
 	points_h(Main, H),
-	points_l(MainP, PtsLP),
-	points_l(MainC, PtsLC),
-	points_l(MainK, PtsLK),
-	points_l(MainT, PtsLT),
+	points_l(MainPTriee, PtsLP),
+	points_l(MainCTriee, PtsLC),
+	points_l(MainKTriee, PtsLK),
+	points_l(MainTTriee, PtsLT),
 	HL is H + PtsLP + PtsLC + PtsLK + PtsLT,
-	ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, Ouverture).
-	
+	ouverture(MainPTriee, MainCTriee, MainKTriee, MainTTriee, LP, LC, LK, LT, H, HL, Ouverture).
+
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '2K') :-
 	HL >= 24,
 	!.
@@ -153,6 +156,69 @@ main(3,
 	 carte(10, trefle), carte(7, trefle)
 	]).
 
+%% ouverture_from_input() is semidet	
+%
+% Acquiert une main de bridge saisie par l'utilisateur
+% et donne l'ouverture lui correspondant.
+%
+ouverture_from_input :-
+	read_main(MainP, MainC, MainK, MainT), nl,
+	ouverture(MainP, MainC, MainK, MainT, Ouverture),
+	write('Ouverture conseillée : '), write(Ouverture), nl.
+
+%% read_main(-MainP:list, -MainC:list, -MainK:list, -MainT:list) is semidet
+%
+% Permet la saisie interactive d'une main depuis l'input standard.
+%
+read_main(MainP, MainC, MainK, MainT) :-
+	write('Entrez chaque main à la couleur demandée '),
+	write('sous forme d\'une liste [carte1, ..., carteN] '),
+	write('en terminant par un point.'), nl,
+	write('Main à Pique   ? '), read(MainP),
+	write('Main à Coeur   ? '), read(MainC),
+	write('Main à Carreau ? '), read(MainK),
+	write('Main à Trèfle  ? '), read(MainT),
+	(	est_valide_main(MainP, MainC, MainK, MainT)
+	;
+		write('La main entrée n\'est pas valide.'), nl,
+		!, fail
+	).
+
+%% write_main(-MainP:list, -MainC:list, -MainK:list, -MainT:list) is det
+%
+% Affiche une main sur l'output standard.
+%
+write_main(MainP, MainC, MainK, MainT) :-
+	write('Pique   : '), write_main(MainP), nl,
+	write('Coeur   : '), write_main(MainC), nl,
+	write('Carreau : '), write_main(MainK), nl,
+	write('Trèfle  : '), write_main(MainT), nl.
+	
+write_main(Main) :-
+	write(Main).
+	
+est_valide_main(MainP, MainC, MainK, MainT) :-
+	length(MainP, LP), 
+	length(MainC, LC), 
+	length(MainK, LK), 
+	length(MainT, LT),
+	L is LP + LC + LK + LT,
+	L = 13,
+	est_valide_main(MainP),
+	est_valide_main(MainC),
+	est_valide_main(MainK),
+	est_valide_main(MainT).
+	
+est_valide_main(Main) :-
+	iter_list(est_valide_carte, Main).
+
+est_valide_carte(as).
+est_valide_carte(roi).
+est_valide_carte(dame).
+est_valide_carte(valet).
+est_valide_carte(I) :-
+	integer(I),
+	I >= 2, I =< 10.
 
 %% tri(+Main, -MainPTriee -MainCTriee, -MainKTriee, -MainTTriee) is det
 %
@@ -161,6 +227,9 @@ main(3,
 %	
 tri(Main, MainPTriee, MainCTriee, MainKTriee, MainTTriee) :-
 	tri_couleur(Main, MainP, MainC, MainK, MainT),
+	tri(MainP, MainC, MainK, MainT, MainPTriee, MainCTriee, MainKTriee, MainTTriee).
+
+tri(MainP, MainC, MainK, MainT, MainPTriee, MainCTriee, MainKTriee, MainTTriee) :-
 	quick_sort(MainP, sup, MainPTriee),
 	quick_sort(MainC, sup, MainCTriee),
 	quick_sort(MainK, sup, MainKTriee),

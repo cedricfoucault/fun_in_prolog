@@ -12,8 +12,8 @@ sudoku(Rows) :-
 	/* generate a well formed sudoku puzzle: 
 	9x9 table of integers in [|1, 9|]: */
 	length(Rows, 9),
-	iter_list(length_(9), Rows),
-	iter_list(fd_domain_(1, 9), Rows),
+	iter_list(length_9, Rows),
+	iter_list(fd_domain_1_9, Rows),
 	/* get the columns and the squares out of the rows:*/
 	transpose(Rows, Columns),
 	get_squares(Rows, Squares),
@@ -39,8 +39,8 @@ sudoku(Rows) :-
 %
 kenken(Groups, Rows) :-
 	length(Rows, 6),
-	iter_list(length_(6), Rows),
-	iter_list(fd_domain_(1, 6), Rows),
+	iter_list(length_6, Rows),
+	iter_list(fd_domain_1_6, Rows),
 	transpose(Rows, Columns),
 	iter_list(fd_all_different, Rows),
 	iter_list(fd_all_different, Columns),
@@ -62,8 +62,8 @@ kenken(Groups, Rows) :-
 %
 unequal(UnequalCells, Rows) :-
 	length(Rows, 5),
-	iter_list(length_(5), Rows),
-	iter_list(fd_domain_(1, 5), Rows),
+	iter_list(length_5, Rows),
+	iter_list(fd_domain_1_5, Rows),
 	transpose(Rows, Columns),
 	iter_list(fd_all_different, Rows),
 	iter_list(fd_all_different, Columns),
@@ -79,8 +79,8 @@ unequal(UnequalCells, Rows) :-
 %
 adjacent(AdjacenceRows, AdjacenceColumns, Rows) :-
 	length(Rows, 5),
-	iter_list(length_(5), Rows),
-	iter_list(fd_domain_(1, 5), Rows),
+	iter_list(length_5, Rows),
+	iter_list(fd_domain_1_5, Rows),
 	transpose(Rows, Columns),
 	iter_list(fd_all_different, Rows),
 	iter_list(fd_all_different, Columns),
@@ -99,8 +99,8 @@ adjacent(AdjacenceRows, AdjacenceColumns, Rows) :-
 %
 towers(LeftRows, RightRows, TopColumns, BottomColumns, Rows) :-
 	length(Rows, 6),
-	iter_list(length_(6), Rows),
-	iter_list(fd_domain_(1, 6), Rows),
+	iter_list(length_6, Rows),
+	iter_list(fd_domain_1_6, Rows),
 	transpose(Rows, Columns),
 	iter_list(fd_all_different, Rows),
 	iter_list(fd_all_different, Columns),
@@ -250,7 +250,12 @@ get_squares(Row1, Row2, Row3, RowsRest, Squares) :-
 	get_squares(Row1Tl, Row2Tl, Row3Tl, RowsRest, TlSquares).
 	
 fd_domain_(Min, Max, L) :- fd_domain(L, Min, Max).
-
+fd_domain_1_9(L) :- fd_domain(L, 1, 9).
+fd_domain_1_6(L) :- fd_domain(L, 1, 6).
+fd_domain_1_5(L) :- fd_domain(L, 1, 5).
+length_9(L) :- length(L, 9).
+length_6(L) :- length(L, 6).
+length_5(L) :- length(L, 5).
 
 %% sudoku_problem(+N:integer, -Rows:matrix) is det
 %
