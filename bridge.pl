@@ -19,11 +19,15 @@ ouverture(MainP, MainC, MainK, MainT, Ouverture) :-
 	length(MainC, LC), 
 	length(MainK, LK), 
 	length(MainT, LT),
-	points_h(Main, H),
+	points_h(MainPTriee, HP),
+	points_h(MainCTriee, HC),
+	points_h(MainKTriee, HK),
+	points_h(MainTTriee, HT),
 	points_l(MainPTriee, PtsLP),
 	points_l(MainCTriee, PtsLC),
 	points_l(MainKTriee, PtsLK),
 	points_l(MainTTriee, PtsLT),
+	H is HP + HC + HK + HT,
 	HL is H + PtsLP + PtsLC + PtsLK + PtsLT,
 	ouverture(MainPTriee, MainCTriee, MainKTriee, MainTTriee, LP, LC, LK, LT, H, HL, Ouverture).
 
