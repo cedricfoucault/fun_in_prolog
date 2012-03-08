@@ -272,27 +272,35 @@ points_h(Main, H) :-
 
 points_h([], Acc, Acc).
 points_h([carte(as, _) | Tl], Acc, N) :-
+	!,
 	NewAcc is Acc + 4,
 	points_h(Tl, NewAcc, N).
 points_h([carte(roi, _) | Tl], Acc, N) :-
+	!,
 	NewAcc is Acc + 3,
 	points_h(Tl, NewAcc, N).
 points_h([carte(dame, _) | Tl], Acc, N) :-
+	!,
 	NewAcc is Acc + 2,
 	points_h(Tl, NewAcc, N).
 points_h([carte(valet, _) | Tl], Acc, N) :-
+	!,
 	NewAcc is Acc + 1,
 	points_h(Tl, NewAcc, N).
 points_h([as | Tl], Acc, N) :-
+	!,
 	NewAcc is Acc + 4,
 	points_h(Tl, NewAcc, N).
 points_h([roi | Tl], Acc, N) :-
+	!,
 	NewAcc is Acc + 3,
 	points_h(Tl, NewAcc, N).
 points_h([dame | Tl], Acc, N) :-
+	!,
 	NewAcc is Acc + 2,
 	points_h(Tl, NewAcc, N).
 points_h([valet | Tl], Acc, N) :-
+	!,
 	NewAcc is Acc + 1,
 	points_h(Tl, NewAcc, N).
 points_h([_ | Tl], Acc, N) :-
@@ -308,10 +316,12 @@ points_l([MeilleureCarte | Tl], N) :-
 	sup(MeilleureCarte, roi),
 	length([MeilleureCarte | Tl], L),
 	L >= 5,
+	!,
 	N = L - 4.
 points_l([dame, valet | Tl], N) :-
 	length([dame, valet | Tl], L),
 	L >= 5,
+	!,
 	N = L - 4.
 points_l(_, 0).
 

@@ -55,7 +55,9 @@ quick_sort([H|T], Order, Acc, Sorted):-
 pivoting(_, _, [], [], []).
 pivoting(Order, H, [X|T], [X|L], G):-
 	call(Order, H, X),
+	!,
 	pivoting(Order, H, T, L, G).
 pivoting(Order, H, [X|T], L, [X|G]):-
 	call(Order, X, H),
+	!,
 	pivoting(Order, H, T, L, G).
