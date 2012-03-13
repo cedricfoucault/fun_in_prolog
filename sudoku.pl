@@ -9,6 +9,9 @@
 %
 sudoku(Rows) :-
 /* strategy used to solve sudoku: generate and test */
+/* 	using constraint-programming */
+/*  (the possible cell values are not all generated explicitely */
+/*   but expressed via constraints)*/
 	/* generate a well formed sudoku puzzle: 
 	9x9 table of integers in [|1, 9|]: */
 	length(Rows, 9),
@@ -256,6 +259,52 @@ fd_domain_1_5(L) :- fd_domain(L, 1, 5).
 length_9(L) :- length(L, 9).
 length_6(L) :- length(L, 6).
 length_5(L) :- length(L, 5).
+
+
+%%
+%
+%
+%
+read_and_solve_sudoku :-
+	read_sudoku(Rows),
+	sudoku(Rows),
+	write('Solution:'), nl,
+	write_matrix(Rows).
+
+read_sudoku(Rows) :-
+	length(Rows, 9),
+	iter_list(length_9, Rows),
+	nl,
+	write('How to type the cell values of the grid:'), nl,
+	write('Assume there is an integer value V at position (I, J)'),
+	write('(where I is the row index and J is the column index).'), nl,
+	write('Then, the cell value must be entered like this:'), nl,
+	write('i j v'), nl, nl,
+	read_sudoku_loop(Rows).
+	
+read_sudoku_loop(Rows) :-
+	write('Do you want to enter a new cell value? (y/n) '),
+	get_char(C),
+	(	C = y ->
+		write('Enter the cell value: '), nl,
+		read_integer(Nrow),
+		read_integer(Ncol), 
+		read_integer(Value),
+		get_cell(cell(Nrow, Ncol), Rows, Value),
+		get_until_newline,
+		read_sudoku_loop(Rows)
+	;	C = n -> true
+	;	write('I did not understand, answer by \'y\' (yes) or \'n\' (no)'),
+		nl,
+		read_sudoku_loop(Rows)
+	).
+	
+get_until_newline :- 
+	get_char('\n'),
+	!.
+get_until_newline :-
+	get_char(_),
+	get_until_newline.
 
 %% sudoku_problem(+N:integer, -Rows:matrix) is det
 %

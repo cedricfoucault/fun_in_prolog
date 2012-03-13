@@ -62,74 +62,94 @@ ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '1K') :-
 	),
 	HL >= 12, HL =< 23,
 	!.
-ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '1K') :-
+ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '1T') :-
 	(	LT > LK, LT >= 3
 	;	LT = LK, LT = 3
 	),
-	HL >= 12, HL =<23,
+	HL >= 12, HL =< 23,
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '2P') :-
 	LP >= 6,
-	HL >= 6, HL =< 10,
+	H >= 6, H =< 10,
+	trois_parmi_cinq(MainP),
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '2C') :-
 	LC >= 6,
-	HL >= 6, HL =< 10,
+	H >= 6, H =< 10,
+	trois_parmi_cinq(MainC),
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '3SA') :-
-	Lm is LK + LT,
-	Lm >= 7,
-	(	MainK = [carte(as), carte(roi), carte(dame) | _]
-	;	MainT = [carte(as), carte(roi), carte(dame) | _]
-	),
+	LK >= 7,
+	MainK = [carte(as), carte(roi), carte(dame) | _],
 	points_h(MainP, HP), 
-	points_h(MainC, HK),
-	HM is HP + HK,
+	points_h(MainC, HC),
+	points_h(MainT, HT),
+	HM is HP + HC + HT,
+	HM =< 2,
+	!.
+ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '3SA') :-
+	LT >= 7,
+	MainT = [carte(as), carte(roi), carte(dame) | _],
+	points_h(MainP, HP), 
+	points_h(MainC, HC),
+	points_h(MainK, HK),
+	HM is HP + HC + HK,
 	HM =< 2,
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '3P') :-
 	LP = 7,
-	HL >= 6, HL =< 10,
+	H >= 6, H =< 10,
+	trois_parmi_cinq(MainP),
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '3C') :-
 	LC = 7,
-	HL >= 6, HL =< 10,
+	H >= 6, H =< 10,
+	trois_parmi_cinq(MainC),
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '3K') :-
 	LK = 7,
-	HL >= 6, HL =< 10,
+	H >= 6, H =< 10,
+	trois_parmi_cinq(MainK),
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '3T') :-
 	LT = 7,
-	HL >= 6, HL =< 10,
+	H >= 6, H =< 10,
+	trois_parmi_cinq(MainT),
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '4P') :-
 	LP >= 8,
 	H < 12,
+	trois_parmi_cinq(MainP),
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '4C') :-
 	LC >= 8,
 	H < 12,
+	trois_parmi_cinq(MainC),
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '4K') :-
 	LK = 8,
 	H < 12,
+	trois_parmi_cinq(MainK),
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '4T') :-
 	LT = 8,
 	H < 12,
+	trois_parmi_cinq(MainT),
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '5K') :-
 	LK >= 9,
+	trois_parmi_cinq(MainK),
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '5T') :-
 	LT >= 9,
+	trois_parmi_cinq(MainT),
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, '4SA') :-
 	Lm is LK + LT,
 	Lm >= 11,
 	LK >= 5,
 	LT >= 5,
+	H >= 6, H =< 10,
 	!.
 ouverture(MainP, MainC, MainK, MainT, LP, LC, LK, LT, H, HL, 'Passe').
 
@@ -325,9 +345,9 @@ points_l([dame, valet | Tl], N) :-
 	N = L - 4.
 points_l(_, 0).
 
-%% sup(+carte:term1, +carte2:term) is semidet
+%% sup(+Carte:term1, +Carte2:term) is semidet
 %
-% Est vrai si carte1 >= carte2 selon l'ordre du bridge.
+% Est vrai si Carte1 >= Carte2 selon l'ordre du bridge.
 %
 sup(as, _).
 sup(roi, C) :- 
@@ -346,6 +366,29 @@ sup(N, M) :-
 	integer(N),
 	integer(M),
 	N >= M.
+
+%% trois_parmi_cinq(+Main:list) is semidet
+%
+% Est vrai si Main contient 3 cartes parmi ARDV10.
+% Fonctionne sur une main triée par ordre décroisant.
+%
+trois_parmi_cinq(Main) :-
+	trois_parmi_cinq(Main, 0).
+	
+trois_parmi_cinq(_, 3).
+trois_parmi_cinq([as | Tl], N) :-
+	M is N + 1
+	trois_parmi(Tl, M).
+trois_parmi_cinq([roi | Tl], N) :-
+	M is N + 1
+	trois_parmi(Tl, M).
+trois_parmi_cinq([dame | Tl], N) :-
+	M is N + 1
+	trois_parmi(Tl, M).
+trois_parmi_cinq([valet | Tl], N) :-
+	M is N + 1
+	trois_parmi(Tl, M).
+trois_parmi_cinq([10 | Tl], 2).
 
 unicolore(LP, LC, LK, LT) :-
 	(	LP >= 6, LC < 4, LK < 4, LT < 4

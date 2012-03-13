@@ -1,6 +1,6 @@
 :- include('graph').
 
-%% dijkstra(+Graph:list, +Start:term, +End:term, -Path, -MinDist) is semidet
+%% dijkstra(+Graph:list, +Start:atom, +End:atom, -Path, -MinDist) is semidet
 %
 % Dijkstra's algorithm implementation.
 % Finds the shortest path starting from the vertex Start to the vertex End
@@ -57,7 +57,10 @@ example_graph(1,
 	 vertex(v4, [adj(v3, 3)])
 	]).
 
-%% init_predecessor(+Graph:list, +Start:term, -GraphInit:term) is det
+example_graph(2,
+	[vertex(v1, [adj(v1, 0), adj(v2, 1)]), vertex(v2, [])]).
+
+%% init_predecessor(+Graph:list, +Start:atom, -GraphInit:term) is det
 %
 % Adds two attributes to each vertex v in Graph
 % that will be updated during the execution of Dijkstra's algorithm:
@@ -74,7 +77,7 @@ init_predecessor([vertex(V, L) | GTl], Start, [vertex(V, L, infinity, nil) | GTl
 	V \= Start,
 	init_predecessor(GTl, Start, GTlNew).
 	
-%% path(+DijkstraGraph:list, +Start:term, +End:term, -Path) is det
+%% path(+DijkstraGraph:list, +Start:atom, +End:atom, -Path) is det
 %
 % Finds the shortest path in the Dijkstra-transformed graph 
 % containing the predecessor of each vertex.
@@ -90,7 +93,7 @@ pred(V, [vertex(U, _, _, _) | Tl], Pred) :-
 	U \= V,
 	pred(V, Tl, Pred).
 
-%% relax_adjlist (+U:term, +Dist:integer,
+%% relax_adjlist (+U:atom, +Dist:integer,
 %% 		+Neighbors:list, +DijkstraGraph:list, -UpdatedGraph) is det
 %
 % Updates the vertex U's neighbors distance and predecessor 
@@ -116,16 +119,27 @@ relax(U, V, DistUV, [vertex(W, L, DistW, Pred) | Gtl], [vertex(W, L, DistW, Pred
 	W \= V,
 	relax(U, V, DistUV, Gtl, GtlNew).
 
-%% extract_min(+DijkstraGraph:list, -MinVertex:term, -Rest:term, -Path) is det
+%% extract_min(+DijkstraGraph:list, -MinVertex:atom, -Rest:term, -Path) is det
 %
 % Extracts the vertex whose distance attribute is minimum.
+% and remove the edges leading to it
 % - DijkstraGraph: A Dijkstra-transformed graph
 % - MinVertex : The vertex of minimum distance
 % - Rest : The remaining subgraph
 %
 extract_min(G, MinVertex, Rest) :-
 	min(G, Min),
-	extract(G, Min, MinVertex, Rest).
+	extract(G, Min, MinVertex, GNew),
+	remove_edges(GNew, MinVertex, Rest).
+
+remove_edges([], _, []).
+remove_edges([vertex(U, L, Dist, Pred) | Gtl], V, [vertex(U, LNew, Dist, Pred) | GtlNew]) :-
+	remove_adj(L, V, LNew).
+
+remove_adj([], _, []).	
+remove_adj([adj(V, _) | Adjtl], V, Adjtl).
+remove_adj([adj(U, Value) | Adjtl], V, [adj(U, Value) | Adjtl]) :-
+	U \= V.
 	
 extract([vertex(V, L, Dist, Pred) | Gtl], Min, vertex(V, L, Dist, Pred), Gtl) :-
 	Dist = Min.
