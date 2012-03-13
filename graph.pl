@@ -9,26 +9,7 @@ write_path([Hd | Tl]) :-
 	write(Hd), 
 	write(' -> '),
 	write_path(Tl).
-
-%% write_path(+Path:list) is det
-%
-% Writes a path with its station connections between vertices.
-% The path Path consists of a list of pairs
-% of vertices and station connections taken at each step.
-%	
-write_path_with_station([]).
-write_path_with_station([pair('', Vertex) | Tl]) :-
-	write_path_with_station(Vertex, Tl).
 	
-write_path_with_station(LastVertex, [pair(Station, Vertex) | Tl]) :-
-	write(LastVertex),
-	write(' -> '),
-	write(Vertex),
-	write(' via '),
-	write(Station),
-	nl,
-	write_path_with_station(Tl).
-
 %% is_adjacent(?U:atom, ?V:atom, +Edge:predicate) is nondet
 %
 % Checks if two nodes are connected in an undirected graph

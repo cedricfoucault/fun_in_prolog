@@ -261,9 +261,9 @@ length_6(L) :- length(L, 6).
 length_5(L) :- length(L, 5).
 
 
-%%
+%% read_and_solve_sudoku is nondet
 %
-%
+% Asks the user to enter a sudoku grid problem and solves it.
 %
 read_and_solve_sudoku :-
 	read_sudoku(Rows),
@@ -271,6 +271,11 @@ read_and_solve_sudoku :-
 	write('Solution:'), nl,
 	write_matrix(Rows).
 
+%% read_sudoku(-Rows:matrix) is semidet
+%
+% Gets a 9x9 sudoku grid from current input.
+% Asks the user to enter each integer values indicated on the grid.
+%
 read_sudoku(Rows) :-
 	length(Rows, 9),
 	iter_list(length_9, Rows),

@@ -27,31 +27,7 @@ hampath(Vertices, Edge, [LastVertex | Tl], Path) :-
 	pick_one(Vertices, Vertex, Rest),
 	is_adjacent(Vertex, LastVertex, Edge),
 	hampath(Rest, Edge, [Vertex, LastVertex | Tl], Path).
-
-%% hampath_station(+Graph:term, -Path:list) is nondet
-%% hampath_station(+Vertices:predicate, +Edge:predicate, -Path:list) 
-%% 		is nondet
-% Finds a hamiltonian path 
-% which does not take the same station connection consecutively
-%	
-hampath_station(graph(Vertices, Edge), Path) :-
-	hampath_station(Vertices, Edge, Path).
-hampath_station(Vertices, Edge, Path) :-
-	call(Vertices, VertexList),
-	hampath_station(VertexList, Edge, [], PathReversed),
-	reverse(PathReversed, Path).
 	
-hampath_station([], _, Acc, Acc) :- !.
-hampath_station(Vertices, Edge, [], Path) :-
-	pick_one(Vertices, Vertex, Rest),
-	hampath_station(Rest, Edge, '', [pair('', Vertex)], Path).
-hampath_station(Vertices, Edge, LastStation, Acc, Path) :-
-	Acc = [pair(LastStation, LastVertex) | _],
-	pick_one(Vertices, Vertex, Rest),
-	is_adjacent_station(Vertex, LastVertex, Edge, Station),
-	Station \= LastStation,
-	hampath_station(Rest, Edge, Station, [pair(Station, Vertex) | Acc], Path).
-
 %% pick_one(+Vertices:list, -Vertex:atom, -Rest:list) is nondet
 %
 % Picks one vertex in the list of Vertices.
@@ -61,8 +37,6 @@ pick_one([Hd | Tl], Hd, Tl).
 pick_one([Hd | Tl], Element, Rest) :- 
 	pick_one(Tl, Element, RestTl),
 	Rest = [Hd | RestTl].
-
-/*write_metro_hampath_station*/
 
 /**
 In other words:
